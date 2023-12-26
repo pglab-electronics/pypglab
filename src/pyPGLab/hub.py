@@ -2,55 +2,69 @@ from .const import LOGGER, PGLAB_DEVICE_TYPES
 from .relay import Relay
 from .shutter import Shutter
 
+from typing import cast
 
 import requests
 import json
 
 class Hub():
     def __init__(self, ip_addr):
-        self.ip = ip_addr
-        self.id = None
-        self.mac = None
-        self.type = None
-        self.name = None
-        self.ver = None
-        self.firmware = None
-        self.parameters = None
+        # device ip address
+        self._ip = ip_addr
+
+        # the device mac address
+        self._mac = None
+
+        # device unique id along all PG Lab devices
+        self._id = None
+
+        # device friendly name for mqtt connection
+        self._name = None
+
+        # device name type
+        self._type = None
+
+        # the manufactor of the device
+        self._manufacturer = None
+
+        # the hardware version
+        self._hardware_version = None
+
+        # the firmware version
+        self._firmware_version = None
+
+        # specific parameters of the device
+        self._parameters = None
 
         # get the PGLab device information
         res = self.send_command("/system/id")
 
-        LOGGER.info("rpc system id: %s", res.text)
-
         # fill informations about the device
-        # all PG LAB device have to reply properly
+        # all PG LAB devices have to reply
         if res:
-            reply = json.loads(res.text)
+            LOGGER.info("rpc system id: %s", res.text)
 
+            # get device id info
+            reply = json.loads(res.text)
             try:
-                self.id = reply["id"]
-                self.mac = reply["mac"]
-                self.type = reply["type"]
-                self.name = reply["name"]
-                self.ver = reply["ver"]
+                self._mac = reply["mac"]
+                self._id = reply["id"]
+                self._name = reply["name"]
+                self._type = reply["type"]
+                self._manufacturer = reply["manufacturer"]
+                self._hardware_version = reply["hw_ver"]
+                self._firmware_version = reply["fw_ver"]
             except Exception as ex:
                 LOGGER.error("Error, missing field(%s)", ex)
+            else:
+                # get specific configuration of the device
+                try:
+                    res = self.send_command("/system/parameters")
+                    self._parameters  = json.loads(res.text)
+                except Exception as ex:
+                    LOGGER.error("Error, getting parameters from the device (%s)", ex)
         else:
-                LOGGER.error("No Reply from RPC call to (%s)", self.ip)
-
-        # get specific configuration for E-Board
-        if self.type == PGLAB_DEVICE_TYPES['E-BOARD']['name']:
-            try:
-                res = self.send_command("/system/parameters")
-                self.parameters  = json.loads(res.text)
-            except Exception as ex:
-                LOGGER.error("Error, getting configuration from E-Board device (%s)", ex)
-
-
-        # get specific configuration fro E-SWITCH
-        #if self.type == PGLAB_DEVICE_TYPES['E-SWITCH']['name']:
-        #    # get the device parameters
-        #    res = self.send_command("/system/parameters")
+            LOGGER.error("No Reply from RPC call to (%s)", self.ip)
 
     def send_command(self, message):
         url = "http://" + self.ip + "/rpc.cgi"
@@ -155,3 +169,43 @@ class Hub():
                 LOGGER.error("Error in shutter creation, %s", ex)
         else:
             return None
+    
+    @property
+    def ip(self) -> str:
+        """Device ip."""
+        return cast(str, self._ip)
+
+    @property
+    def mac(self) -> str:
+        """Device mac."""
+        return cast(str, self._mac)
+
+    @property
+    def id(self) -> str:
+        """Device unique id."""
+        return cast(str, self._id)
+
+    @property
+    def name(self) -> str:
+        """Device friendly name."""
+        return cast(str, self._name)
+
+    @property
+    def type(self) -> str:
+        """Device type name (E-Board, E-Switch etc...)"""
+        return cast(str, self._type)
+
+    @property
+    def manufactor(self) -> str:
+        """Device manufacturer."""
+        return cast(str, self._manufacturer)
+
+    @property
+    def hardware_version(self) -> str:
+        """Device hardware version."""
+        return cast(str, self._hardware_version)
+
+    @property
+    def firmware_version(self) -> str:
+        """Device firmware version."""
+        return cast(str, self._firmware_version)

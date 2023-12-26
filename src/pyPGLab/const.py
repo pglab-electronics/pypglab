@@ -11,4 +11,4 @@ PGLAB_DEVICE_TYPES = {
     'E-SWITCH': {'name': "E-Switch", 'mqtt':'eswitch'},
 }
 
-PGLAB_MDNS_HTTP_SERVER = "PGLAB._http._tcp.local."
+PGLAB_MDNS_HTTP_SERVER = "pglab._http._tcp.local."
