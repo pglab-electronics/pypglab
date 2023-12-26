@@ -87,8 +87,8 @@ class Hub():
         # return if a specific relay is connected to e-board and available to use
         if self.is_eboard():
             try:
-                if index < int(self.parameters['relays_count']):
-                    connection_status = self.parameters['relays_status']
+                if index < int(self._parameters['relays_count']):
+                    connection_status = self._parameters['relays_status']
                     status_mask = connection_status[ index / 8]
                     return status_mask & (1 << (index % 8))
                 else:
@@ -139,7 +139,7 @@ class Hub():
     def relay_count(self):
         # get the total number of relay controlled
         if self.is_eboard():
-            return int(self.parameters['relays_count'])
+            return int(self._parameters['relays_count'])
         else:
             return 0
     
@@ -148,7 +148,7 @@ class Hub():
         if self.is_eboard():
             try: 
                 # shutter have priority... only create a relay with index that don't conflict with shutter
-                if (index >= int(self.parameters['shutters_count'])) and (index < int(self.parameters['relays_count'])):
+                if (index >= int(self._parameters['shutters_count'])) and (index < int(self._parameters['relays_count'])):
                     if self.is_relay_connected(index):
                         return Relay(self, index)
                 return None
@@ -161,7 +161,7 @@ class Hub():
         # create a shutter, only e-board can create a shutter
         if self.is_eboard():
             try:
-                if index < int(self.parameters['shutters_count']):
+                if index < int(self._parameters['shutters_count']):
                     if self.is_relay_connected(index)*2:
                         return Shutter(self, index)                
                 return None
