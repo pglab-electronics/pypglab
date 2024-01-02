@@ -1,6 +1,6 @@
 #import PGLab modules
 from .const import VERSION, PGLAB_MDNS_HTTP_SERVER, LOGGER
-from pypglab.device import Device
+from .device import Device
 
 #import all other modules
 from time import sleep
