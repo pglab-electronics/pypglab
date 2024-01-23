@@ -1,0 +1,29 @@
+[build-system]
+    requires = ["hatchling"]
+    build-backend = "hatchling.build"
+
+[project]
+    name = "pypglab"
+    description = "An asynchronous Python library to communicate with PG LAB Electronics devices over MQTT."
+    readme = "README.md"
+    classifiers = [
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Topic :: Home Automation",
+        "Topic :: Software Development :: Libraries :: Python Modules"
+    ]
+    requires-python = ">=3.8"
+    version = "0.0.1"
+    keywords = ["pglab"]
+
+
+[[project.authors]]
+    name = "Pierluigi Garaventa"
+    email = "pglab.electronics@gmail.com"
+
+[project.license]
+    text = "MIT License"
+
+[project.urls]
+    Homepage = "https://github.com/pglab-electronics/pypglab"
