@@ -30,8 +30,8 @@ CONFIG_ID: Final = "id"
 CONFIG_NAME: Final = "name"
 CONFIG_TYPE: Final = "type"
 CONFIG_MANUFACTOR: Final = "manufacturer"
-CONFIG_HARDWARE_VERSION: Final = "hw" 
-CONFIG_FIRMWARE_VERSION: Final = "fw" 
+CONFIG_HARDWARE_VERSION: Final = "hw"
+CONFIG_FIRMWARE_VERSION: Final = "fw"
 CONFIG_PARAMETERS: Final = "params"
 CONFIG_EBOARD_SHUTTERS: Final = "shutters"
 CONFIG_EBOARD_BOARDS: Final = "boards"
@@ -67,10 +67,11 @@ ENTITY_TOPIC = {
 # Sensors value
 SENSOR_TEMPERATURE: Final = "temp"
 SENSOR_VOLTAGE: Final = "volt"
+SENSOR_REBOOT_TIME: Final = "rtime"
 
 # Sensors configuration for a specific PG LAB device
 SENSOR_CONFIG = {
-    "E-Board": [SENSOR_TEMPERATURE, SENSOR_VOLTAGE],
+    "E-Board": [SENSOR_TEMPERATURE, SENSOR_VOLTAGE, SENSOR_REBOOT_TIME],
     "E-Relay": [],
     "E-Switch": [],
 }

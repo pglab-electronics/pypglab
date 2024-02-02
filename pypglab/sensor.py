@@ -3,7 +3,7 @@
 import json
 from typing import Any, cast
 
-from .const import ENTITY_SENSOR, SENSOR_TEMPERATURE, SENSOR_VOLTAGE
+from .const import ENTITY_SENSOR, SENSOR_REBOOT_TIME, SENSOR_TEMPERATURE, SENSOR_VOLTAGE
 from .entity import Entity
 from .mqtt import Client
 
@@ -14,6 +14,8 @@ def SensorDefaultValue(sensor_type: str) -> Any:
         return 0
     if sensor_type == SENSOR_VOLTAGE:
         return 0
+    if sensor_type == SENSOR_REBOOT_TIME:
+        return 0
     return None
 
 
@@ -22,6 +24,8 @@ def SensorValueCast(sensor_type: str, value: Any) -> Any:
     if sensor_type == SENSOR_TEMPERATURE:
         return cast(int, value)
     if sensor_type == SENSOR_VOLTAGE:
+        return cast(int, value)    
+    if sensor_type == SENSOR_REBOOT_TIME:
         return cast(int, value)
     return None
 
