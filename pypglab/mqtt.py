@@ -25,7 +25,7 @@ class Client:
         ],
         unsubscribe: Callable[[Sub_State], Coroutine[Any, Any, dict]],
     ) -> None:
-        """Initiliaze."""
+        """Initialize."""
 
         self._publish = publish
         self._subscribe = subscribe
@@ -35,14 +35,14 @@ class Client:
     async def publish(
         self, topic: str, payload: str, qos: int | None = 0, retain: bool | None = False
     ) -> None:
-        """Publis a MQTT message."""
+        """Publish a MQTT message."""
         if self._publish:
             await self._publish(topic, payload, qos, retain)
 
     async def subscribe(
         self, unique_id: int, topic: str, callback: Subcribe_CallBack
     ) -> None:
-        """Subscriobe to a MQTT topic."""
+        """Subscribe to a MQTT topic."""
 
         if self._subscribe:
             # get the hash value from the topic

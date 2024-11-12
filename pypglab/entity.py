@@ -96,7 +96,7 @@ class Entity:
 
     @property
     def hash(self) -> int:
-        """Return the entity uniquie id hash value."""
+        """Return the entity unique id hash value."""
         return self._hash
 
     @property

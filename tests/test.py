@@ -50,7 +50,7 @@ class TestPgLab(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(len(discovery) > 0, "No PG LAB Electronics Devices are connected to the MQTT broker.")        
         return discovery
     
-    async def _relay_togle(self, r: Relay):
+    async def _relay_toggle(self, r: Relay):
         state_update_changed : bool = False
 
         def state_changed(payload:str)->None:
@@ -65,16 +65,16 @@ class TestPgLab(unittest.IsolatedAsyncioTestCase):
 
         await r.turn_on()
         time.sleep(1)
-        self.assertTrue(r.state, "Unexpeted relay state.")
+        self.assertTrue(r.state, "Unexpected relay state.")
 
         await r.turn_off()
         time.sleep(1)
-        self.assertTrue( not r.state, "Unexpeted relay state.")
+        self.assertTrue( not r.state, "Unexpected relay state.")
 
         self.assertTrue(state_update_changed, "Relay Status update don't received.")
 
 
-    async def _shutter_togle(self, s: Shutter):
+    async def _shutter_toggle(self, s: Shutter):
         state_update_changed : bool = False
 
         def state_changed(payload:str)->None:
@@ -91,25 +91,25 @@ class TestPgLab(unittest.IsolatedAsyncioTestCase):
         await s.open()
         time.sleep(2)
 
-        self.assertTrue( s.state is not Shutter.STATE_CLOSED, "Unexpeted shuttur state")
+        self.assertTrue( s.state is not Shutter.STATE_CLOSED, "Unexpected shutter state")
 
         # close the shutter and wait enough time to be sure the shutter is fully close
         await s.close()
         time.sleep(UNIT_TEST_SHUTTER_CLOSE_TIMEOUT)
 
-        self.assertTrue( s.state is Shutter.STATE_CLOSED, "Unexpeted shuttur state")
+        self.assertTrue( s.state is Shutter.STATE_CLOSED, "Unexpected shutter state")
 
-        # we are sure that the shutte is fully close
+        # we are sure that the shutter is fully close
         # open the shutter and check the state after 1 second
         await s.open()
         time.sleep(1)
 
-        self.assertTrue( s.state is Shutter.STATE_OPENING, "Unexpeted shuttur state")
+        self.assertTrue( s.state is Shutter.STATE_OPENING, "Unexpected shutter state")
 
         # the shutter is opening ... stop and check the state
         await s.stop()
         time.sleep(1)
-        self.assertTrue(s.state is Shutter.STATE_OPEN, "Unexpeted shuttur state")
+        self.assertTrue(s.state is Shutter.STATE_OPEN, "Unexpected shutter state")
         self.assertTrue(state_update_changed, "Shutter Status update don't received.")
 
     async def _sensor_state(self, sensor: Sensor):
@@ -156,7 +156,7 @@ class TestPgLab(unittest.IsolatedAsyncioTestCase):
         await self._get_discovery()
 
     async def test_device(self):
-        """Tesf if it's possible to creare a PG LAB Electronics device with the discovery message."""
+        """Test if it's possible to create a PG LAB Electronics device with the discovery message."""
         pglab_discovery = await self._get_discovery()
 
         for discovery in pglab_discovery:        
@@ -176,11 +176,11 @@ class TestPgLab(unittest.IsolatedAsyncioTestCase):
                 return
             
             for r in pglab_device.relays:
-                await self._relay_togle(r)
+                await self._relay_toggle(r)
 
 
     async def test_shutter(self):
-        """Tesf if change status on relay status change."""
+        """Test if change status on relay status change."""
         pglab_discovery = await self._get_discovery()
 
         for discovery in pglab_discovery:        
@@ -191,7 +191,7 @@ class TestPgLab(unittest.IsolatedAsyncioTestCase):
             
             # test only one shutter because is going to take time
             shutter = pglab_device.shutters[0]
-            await self._shutter_togle(shutter)
+            await self._shutter_toggle(shutter)
 
 
     async def test_sensors(self):
