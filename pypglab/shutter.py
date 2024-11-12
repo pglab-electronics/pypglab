@@ -70,5 +70,4 @@ async def CreateShutter(
     """Create and initialize a PG LAB shutter instance."""
 
     shutter = Shutter(device_id, device_name, index, mqtt)
-    await shutter.subscribe_topics()
     return shutter

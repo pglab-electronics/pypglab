@@ -33,6 +33,7 @@ config = {
     "fw":"255.255.255", 
     "type":"E-Board", 
     "id":"E-Board-DD53AC85", 
+    
     "manufacturer":"PG LAB Electronics", 
     "params":{
         "shutters":3, 
@@ -41,7 +42,7 @@ config = {
 }
 
 pglab_device = Device()
-asyncio.run( pglab_device.config(pglab_mqtt_client, config) )
+asyncio.run( pglab_device.config(pglab_mqtt_client, config, True) )
 
 for relay in pglab_device.relays:
     asyncio.run( relay.turn_on() )

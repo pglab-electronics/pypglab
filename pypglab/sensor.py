@@ -80,5 +80,4 @@ async def CreateSensor(
     """Create and initialize a PG LAB relay instance."""
 
     sensor = Sensor(device_id, device_name, config, mqtt)
-    await sensor.subscribe_topics()
     return sensor

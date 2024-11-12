@@ -57,7 +57,7 @@ class TestPgLab(unittest.IsolatedAsyncioTestCase):
             nonlocal state_update_changed
             state_update_changed = True
         
-        r.add_state_update(state_changed)
+        r.set_on_state_callback(state_changed)
 
         # be sure that the relay is off
         await r.turn_off()
@@ -81,7 +81,7 @@ class TestPgLab(unittest.IsolatedAsyncioTestCase):
             nonlocal state_update_changed
             state_update_changed = True
         
-        s.add_state_update(state_changed)
+        s.set_on_state_callback(state_changed)
 
         # the test suppose that the shutter opening/closing time is 
         # bigger than 10 second
@@ -99,7 +99,7 @@ class TestPgLab(unittest.IsolatedAsyncioTestCase):
 
         self.assertTrue( s.state is Shutter.STATE_CLOSED, "Unexpected shutter state")
 
-        # we are sure that the shutter is fully close
+        # we are sure that the shutte is fully close
         # open the shutter and check the state after 1 second
         await s.open()
         time.sleep(1)
@@ -120,7 +120,7 @@ class TestPgLab(unittest.IsolatedAsyncioTestCase):
             nonlocal state_update_changed
             state_update_changed = True
         
-        sensor.add_state_update(state_changed)
+        sensor.set_on_state_callback(state_changed)
 
         # wait for sensor update
         timeout = time.time() + UNIT_TEST_SENSOR_TIMEOUT
@@ -144,7 +144,7 @@ class TestPgLab(unittest.IsolatedAsyncioTestCase):
         discovery_payload = json.loads(discovery_payload)
 
         # try to configure the pglab_device
-        bres = await pglab_device.config(self._mqtt.pglab_mqtt_client, discovery_payload)
+        bres = await pglab_device.config(self._mqtt.pglab_mqtt_client, discovery_payload, True)
 
         self.assertTrue( bres, "Error during PG LAB Electronics device configuration.")
 
@@ -166,7 +166,7 @@ class TestPgLab(unittest.IsolatedAsyncioTestCase):
                 self.assertTrue( len(pglab_device.relays) > 0 or len(pglab_device.shutters) > 0, "No shutters or relays available.")
 
     async def test_relay(self):
-        """Tesf if change status on relay status change."""
+        """Test if change status on relay status change."""
         pglab_discovery = await self._get_discovery()
 
         for discovery in pglab_discovery:        

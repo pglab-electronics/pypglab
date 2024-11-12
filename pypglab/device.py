@@ -109,7 +109,7 @@ class Device:
             )
         )
 
-    async def config(self, mqtt: Client, config: dict) -> bool:
+    async def config(self, mqtt: Client, config: dict, subscribe:bool = False) -> bool:
         """Perform internal configuration."""
 
         # validate config message
@@ -159,18 +159,25 @@ class Device:
             for index in range(0, shutters):
                 if await self.is_relay_connected(index * 2):
                     shutter = await CreateShutter(self._id, self._name, index, mqtt)
+                    if subscribe:
+                        await shutter.subscribe_topics()
                     self._shutters.append(shutter)
 
             # prepare all relays
             for index in range(2 * shutters, 64):
                 if await self.is_relay_connected(index):
                     relay = await CreateRelay(self._id, self._name, index, mqtt)
+                    if subscribe:
+                        await relay.subscribe_topics()
                     self._relays.append(relay)
 
             # prepare the sensor
             self._sensors = await CreateSensor(
                 self._id, self._name, SENSOR_CONFIG[self._type], mqtt
             )
+            
+            if subscribe:
+                await self._sensors.subscribe_topics()
         
         return True
 
@@ -186,7 +193,7 @@ class Device:
             return boards[bi] == "1"
         else:
             return False
-
+        
     @property
     def is_eboard(self):
         """Return true if it is a E-Board device."""

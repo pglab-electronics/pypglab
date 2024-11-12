@@ -40,7 +40,7 @@ class Entity:
         self._mqtt = mqtt
 
         # external status update callback
-        self._state_update: [State_Update] = []
+        self._on_state_update_callback: State_Update = None
 
         # topic used for change entity status
         if entity_type is ENTITY_SENSOR:
@@ -62,9 +62,9 @@ class Entity:
         To be overwritten by child class.
         """
 
-    def add_state_update(self, state_update: State_Update) -> None:
+    def set_on_state_callback(self, on_state_update: State_Update) -> None:
         """Set a callback to inform about new state."""
-        self._state_update.append(state_update)
+        self._on_state_update_callback = on_state_update
 
     async def subscribe_topics(self) -> None:
         """PG LAB Entity subscribe to mqtt relay status changing."""
@@ -72,8 +72,8 @@ class Entity:
         def on_message(topic, payload) -> None:
             self.status_change_received(payload)
 
-            for state_update in self._state_update:
-                state_update(payload)
+            if self._on_state_update_callback:
+                self._on_state_update_callback(payload)
 
         set_cmd, state_cmd = ENTITY_TOPIC[self._type]
         status_update_topic = self._topic + state_cmd

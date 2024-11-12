@@ -49,5 +49,4 @@ async def CreateRelay(
     """Create and initialize a PG LAB relay instance."""
 
     relay = Relay(device_id, device_name, index, mqtt)
-    await relay.subscribe_topics()
     return relay
