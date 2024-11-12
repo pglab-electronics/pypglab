@@ -30,8 +30,8 @@ pip install pypglab
 
 ## Usage
 
-A client interface in pypglab/mqtt.py is used for the comunication with MQTT broker.
-The interface exposes callback for: publish, subscribe and unsusbribe.
+A client interface in pypglab/mqtt.py is used for the communication with MQTT broker.
+The interface exposes callback for: publish, subscribe and unsubscribe.
 Who is using pypglab library must manage the MQTT connection and define the MQTT client callback.
 
 The following is a pseudo example that turn on all relays.
@@ -46,7 +46,7 @@ async def setup_pglab_device(config:dict):
 
   pglab_mqtt_client = Client(mqtt_publish, None, None)
   pglab_device = Device()
-  await pglab_device.config(pglab_mqtt_client, config)
+  await pglab_device.config(pglab_mqtt_client, config, True)
 
   for relay in pglab_device.relays:
       await relay.turn_on() 
@@ -65,4 +65,5 @@ Please give us feedback on pglab.electronics@gmail.com
 This plugin is created by PG Lab Electronics.
 
 ## License
+
 Code is released under [MIT license]
