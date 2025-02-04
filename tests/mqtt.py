@@ -1,6 +1,6 @@
 import paho.mqtt.client as mqtt
 
-from pypglab.mqtt import Client, Sub_State, Subcribe_CallBack
+from pypglab.mqtt import Client, Sub_State, Subscribe_CallBack
 
 MQTT_SERVER = "localhost"
 MQTT_PORT = 1883
@@ -11,10 +11,10 @@ PGLAB_DISCOVERY_TOPIC = "pglab/discovery"
 
 
 class MQTT:
-    """MQTT Client class to comunicate with PG LAB device using paho MQTT library."""
+    """MQTT Client class to communicate with PG LAB device using paho MQTT library."""
     
     def __init__(self) -> None:
-        """Initiliaze."""
+        """Initialize"""
 
         def on_connect(client, userdata, flags, rc):
             """The callback for when the client receives a CONNACK response from the server."""
@@ -62,7 +62,7 @@ class MQTT:
             self._mqtt_client.publish(topic, payload, qos, retain)
 
         async def mqtt_subscribe(
-            sub_state: Sub_State, topic: str, callback_func: Subcribe_CallBack
+            sub_state: Sub_State, topic: str, callback_func: Subscribe_CallBack
         ) -> Sub_State:
             
             self._subscribe_callback[topic] = callback_func

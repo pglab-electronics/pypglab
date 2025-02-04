@@ -10,17 +10,17 @@ This library was created for Home Assistant integrations of PG LAB Electronics.
 ## Features
 
 - Discover devices
-- Controll relays (turn on/off)
+- Control relays (turn on/off)
 - Monitor relays status (on/off)
-- Controll shutters (open/close/pause)
+- Control shutters (open/close/pause)
 - Monitor shutters status (open/opening/closed/closing)
 - Receiving device internal sensor update
 
 ## Devices supported
-- E-Board 
+- E-BOARD
 
-## Comming soon
-- E-Switch
+## Coming soon
+- E-SWITCH
 
 ## Installation
 
@@ -30,35 +30,44 @@ pip install pypglab
 
 ## Usage
 
-A client interface in pypglab/mqtt.py is used for the communication with MQTT broker.
-The interface exposes callback for: publish, subscribe and unsubscribe.
-Who is using pypglab library must manage the MQTT connection and define the MQTT client callback.
+The library has an helper class to simplify the discovery and the use of PG LAB Electronics devices.
+The helper class hide the complexity to setup the MQTT connection with the broker.
 
-The following is a pseudo example that turn on all relays.
+In this simple working example pyPgLab class does the connection with the MQTT broker, retrieve an E-BOARD 
+device and turn ON all available relay outputs
 
 ```python
-from pypglab.device import Device
-from pypglab.mqtt import Client
 
-async def setup_pglab_device(config:dict):
-  async def mqtt_publish( topic: str, payload: str, qos: int | None = 0, retain: bool | None = False) -> None:
-      print("TODO... call the client MQTT publish")
+from pypglab.helper import pyPgLab
 
-  pglab_mqtt_client = Client(mqtt_publish, None, None)
-  pglab_device = Device()
-  await pglab_device.config(pglab_mqtt_client, config, True)
+def turn_relay(relay, on):
+    if on:
+        asyncio.run( relay.turn_on() )
+    else:
+        asyncio.run( relay.turn_off() )
+    time.sleep(0.02)
 
-  for relay in pglab_device.relays:
-      await relay.turn_on() 
+pglab = pyPgLab()
+pglab.start("192.168.1.8")
+pglab.connect()
+
+e_board = pglab.get_device_by_name("E-BOARD-DD53AC85")
+
+if e_board :
+    # turn all relay outputs ON
+    for relay in e_board.relays:
+        asyncio.run( relay.turn_on() )
+
+pglab.stop()
 
 ```
 
-For working example and proper setup of the MQTT connection and callback, 
+For more example and proper setup of the MQTT connection and callback, 
 see the example.py and the unittest of pypglab python library.
 
 ## Feedback
 
-Please give us feedback on pglab.electronics@gmail.com
+Please give us feedback on support@pglab.dev
 
 ## Founder
 

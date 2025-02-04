@@ -1,4 +1,4 @@
-"""Sensor for pypglab."""
+"""Sensor for pypglab"""
 
 import json
 from typing import Any, cast
@@ -9,7 +9,7 @@ from .mqtt import Client
 
 
 def SensorDefaultValue(sensor_type: str) -> Any:
-    """Return a default value for a sensor type."""
+    """Return a default value for a sensor type"""
     if sensor_type == SENSOR_TEMPERATURE:
         return 0
     if sensor_type == SENSOR_VOLTAGE:
@@ -20,7 +20,7 @@ def SensorDefaultValue(sensor_type: str) -> Any:
 
 
 def SensorValueCast(sensor_type: str, value: Any) -> Any:
-    """Cast a value to the specific type of the sensor."""
+    """Cast a value to the specific type of the sensor"""
     if sensor_type == SENSOR_TEMPERATURE:
         return cast(int, value)
     if sensor_type == SENSOR_VOLTAGE:
@@ -31,7 +31,7 @@ def SensorValueCast(sensor_type: str, value: Any) -> Any:
 
 
 class Sensor(Entity):
-    """It's a PG LAB Electronics sensor."""
+    """It's a PG LAB Electronics sensor"""
 
     def __init__(
         self,
@@ -40,7 +40,7 @@ class Sensor(Entity):
         config: [str],
         mqtt: Client,
     ) -> None:
-        """Initialize."""
+        """Initialize"""
         super().__init__(device_id, device_name, 0, ENTITY_SENSOR, mqtt)
 
         # initialize all sensor value
@@ -55,7 +55,7 @@ class Sensor(Entity):
         return None
 
     def status_change_received(self, payload: str) -> None:
-        """Call to notify a new status change."""
+        """Call to notify a new status change"""
         values = json.loads(payload)
 
         for s in self._state:
@@ -65,19 +65,19 @@ class Sensor(Entity):
 
     @property
     def state(self) -> dict:
-        """Get sensor status."""
+        """Get sensor status"""
         return self._state
 
     @property
     def size(self) -> int:
-        """Return the number of stored sensor value."""
+        """Return the number of stored sensor values"""
         return len(self._state)
 
 
 async def CreateSensor(
     device_id: str, device_name: str, config: [str], mqtt: Client
 ) -> Sensor:
-    """Create and initialize a PG LAB relay instance."""
+    """Create and initialize a PG LAB sensor instance"""
 
     sensor = Sensor(device_id, device_name, config, mqtt)
     return sensor

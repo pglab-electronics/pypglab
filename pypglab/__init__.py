@@ -1,4 +1,4 @@
-"""Library to communicate with PG LAB Electronics devices."""
+"""Library to communicate with PG LAB Electronics devices"""
 from __future__ import annotations
 from . const import PGLAB_VERSION
 

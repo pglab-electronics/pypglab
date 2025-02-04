@@ -19,7 +19,7 @@ from .const import (
     CONFIG_NAME, 
     CONFIG_PARAMETERS,
     CONFIG_TYPE, 
-    CONFIG_MANUFACTOR, 
+    CONFIG_MANUFACTURER, 
     CONFIG_HARDWARE_VERSION, 
     CONFIG_FIRMWARE_VERSION,
     CONFIG_EBOARD_SHUTTERS,
@@ -34,14 +34,14 @@ from .shutter import CreateShutter
 
 PGLAB_DISCOVERY_SCHEMA = Schema(
     {
-        CONFIG_MAC: cv.macaddrs,
         CONFIG_IP: cv.ipaddrs,
-        CONFIG_ID: cv.string,
+        CONFIG_MAC: cv.macaddrs,        
         CONFIG_NAME: cv.string,
-        CONFIG_TYPE: cv.devicetype,
-        CONFIG_MANUFACTOR: cv.manufacturer,
         CONFIG_HARDWARE_VERSION: cv.version,
         CONFIG_FIRMWARE_VERSION: cv.version,
+        CONFIG_TYPE: cv.devicetype,
+        CONFIG_ID: cv.string,
+        CONFIG_MANUFACTURER: cv.manufacturer,
     },
     required=True,
     extra=ALLOW_EXTRA,
@@ -63,7 +63,7 @@ class Device:
     """The class represent a generic PG LAB device."""
 
     def __init__(self) -> None:
-        """Initiliaze."""
+        """Initialize."""
 
         # device ip address
         self._ip = None
@@ -80,7 +80,7 @@ class Device:
         # device name type
         self._type = None
 
-        # the manufactor of the device
+        # the manufacturer of the device
         self._manufacturer = None
 
         # the hardware version
@@ -124,7 +124,7 @@ class Device:
         self._id = config[CONFIG_ID]
         self._name = config[CONFIG_NAME]
         self._type = config[CONFIG_TYPE]
-        self._manufacturer = config[CONFIG_MANUFACTOR]
+        self._manufacturer = config[CONFIG_MANUFACTURER]
         self._hardware_version = config[CONFIG_HARDWARE_VERSION]
         self._firmware_version = config[CONFIG_FIRMWARE_VERSION]
 
@@ -245,7 +245,7 @@ class Device:
         return cast(str, self._type)
 
     @property
-    def manufactor(self) -> str:
+    def manufacturer(self) -> str:
         """Device manufacturer."""
         return cast(str, self._manufacturer)
 

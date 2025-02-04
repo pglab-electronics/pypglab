@@ -1,4 +1,4 @@
-"""Shutter for pypglab."""
+"""Shutter for pypglab"""
 
 from .const import (
     ENTITY_SHUTTER,
@@ -15,7 +15,7 @@ from .mqtt import Client
 
 
 class Shutter(Entity):
-    """It's a PG LAB Electronics shutter."""
+    """It's a PG LAB Electronics shutter"""
 
     STATE_UNKNOWN = 0
     STATE_OPENING = 1
@@ -30,13 +30,14 @@ class Shutter(Entity):
         index: int,
         mqtt: Client,
     ) -> None:
-        """Initialize."""
+        """Initialize"""
         super().__init__(device_id, device_name, index, ENTITY_SHUTTER, mqtt)
 
         self._state = None
 
     def status_change_received(self, payload: str) -> None:
-        """Call o notify a new status change."""
+        """Callback to notify a new status change"""
+
         if payload == SHUTTER_STATE_OPENING:
             self._state = Shutter.STATE_OPENING
         elif payload == SHUTTER_STATE_OPEN:
@@ -47,27 +48,27 @@ class Shutter(Entity):
             self._state = Shutter.STATE_CLOSED
 
     async def open(self) -> None:
-        """Open the shutter."""
+        """Open the shutter"""
         await self.set_state(SHUTTER_CMD_OPEN)
 
     async def close(self) -> None:
-        """Close the sutter."""
+        """Close the shutter"""
         await self.set_state(SHUTTER_CMD_CLOSE)
 
     async def stop(self) -> None:
-        """Stop the shutter."""
+        """Stop the shutter"""
         await self.set_state(SHUTTER_CMD_STOP)
 
     @property
     def state(self) -> int:
-        """Get shutter status."""
+        """Get shutter status"""
         return self._state
 
 
 async def CreateShutter(
     device_id: str, device_name: str, index: int, mqtt: Client
 ) -> Shutter:
-    """Create and initialize a PG LAB shutter instance."""
+    """Create and initialize a PG LAB shutter instance"""
 
     shutter = Shutter(device_id, device_name, index, mqtt)
     return shutter

@@ -14,12 +14,12 @@
         "Topic :: Software Development :: Libraries :: Python Modules"
     ]
     requires-python = ">=3.8"
-    version = "0.0.3"
+    version = "0.0.4"
     keywords = ["pglab, pypglab"]
     dependencies = [
         "voluptuous",
+        "paho-mqtt"
     ]
-
 
 [[project.authors]]
     name = "Pierluigi Garaventa"

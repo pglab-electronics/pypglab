@@ -5,7 +5,7 @@ from typing import Final
 
 LOGGER = logging.getLogger(__name__)
 
-PGLAB_VERSION = "0.0.1"
+PGLAB_VERSION = "0.0.4"
 
 # All devices managed by this python library
 E_BOARD: Final = "E-BOARD"
@@ -16,9 +16,9 @@ MANUFACTURER: Final = "PG LAB Electronics"
 
 # The following define the device type name
 PGLAB_DEVICE_TYPES = {
-    E_BOARD: "E-Board",
-    E_RELAY: "E-Relay",
-    E_SWITCH: "E-Switch",
+    E_BOARD: "E-BOARD",
+    E_RELAY: "E-RELAY",
+    E_SWITCH: "E-SWITCH",
 }
 
 TOPIC_PGLAB: Final = "pglab"
@@ -28,8 +28,8 @@ CONFIG_MAC: Final = "mac"
 CONFIG_IP: Final = "ip"
 CONFIG_ID: Final = "id"
 CONFIG_NAME: Final = "name"
-CONFIG_TYPE: Final = "type"
-CONFIG_MANUFACTOR: Final = "manufacturer"
+CONFIG_TYPE: Final = "type" 
+CONFIG_MANUFACTURER: Final = "manufacturer"
 CONFIG_HARDWARE_VERSION: Final = "hw"
 CONFIG_FIRMWARE_VERSION: Final = "fw"
 CONFIG_PARAMETERS: Final = "params"
@@ -71,7 +71,10 @@ SENSOR_REBOOT_TIME: Final = "rtime"
 
 # Sensors configuration for a specific PG LAB device
 SENSOR_CONFIG = {
-    "E-Board": [SENSOR_TEMPERATURE, SENSOR_VOLTAGE, SENSOR_REBOOT_TIME],
-    "E-Relay": [],
-    "E-Switch": [],
+    "E-BOARD": [SENSOR_TEMPERATURE, SENSOR_VOLTAGE, SENSOR_REBOOT_TIME],
+    "E-RELAY": [],
+    "E-SWITCH": [],
 }
+
+# PG LAB discovery topic
+PGLAB_DISCOVERY_TOPIC = "pglab/discovery"

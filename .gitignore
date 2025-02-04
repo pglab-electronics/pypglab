@@ -1,5 +1,6 @@
 .DS_STORE
 .vscode
+*.pyc
 dist/
 pypglab/__pycache__
 tests/__pycache__

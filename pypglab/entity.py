@@ -1,5 +1,6 @@
-"""A base class entity for pypglab."""
+"""A base class entity for pypglab"""
 
+import time
 from collections.abc import Callable
 
 from .const import ENTITY_SENSOR, ENTITY_TOPIC, TOPIC_PGLAB
@@ -9,7 +10,7 @@ State_Update = Callable[[str], None]
 
 
 class Entity:
-    """Base class for PG LAB entities."""
+    """Base class for PG LAB entities"""
 
     # define a global id incremented for every instance
     entity_id: int = 0
@@ -22,7 +23,7 @@ class Entity:
         entity_type: str,
         mqtt: Client,
     ) -> None:
-        """Initialize."""
+        """Initialize"""
 
         # device id connected to this entity
         self._device_id = device_id
@@ -57,17 +58,14 @@ class Entity:
         Entity.entity_id = Entity.entity_id + 1
 
     def status_change_received(self, payload: str) -> None:
-        """Call to notify a new status change.
-
-        To be overwritten by child class.
-        """
+        """Call to notify a new status change, to be overwritten by child class"""
 
     def set_on_state_callback(self, on_state_update: State_Update) -> None:
-        """Set a callback to inform about new state."""
+        """Set a callback to inform about new state"""
         self._on_state_update_callback = on_state_update
 
     async def subscribe_topics(self) -> None:
-        """PG LAB Entity subscribe to mqtt relay status changing."""
+        """PG LAB Entity subscribe to mqtt relay status changing"""
 
         def on_message(topic, payload) -> None:
             self.status_change_received(payload)
@@ -80,26 +78,28 @@ class Entity:
         await self._mqtt.subscribe(self._hash, status_update_topic, on_message)
 
     async def unsubscribe_topics(self) -> None:
-        """Unsubscribe from all MQTT topics."""
+        """Unsubscribe from all MQTT topics"""
 
         set_cmd, state_cmd = ENTITY_TOPIC[self._type]
         status_update_topic = self._topic + state_cmd
         await self._mqtt.unsubscribe(self._hash, status_update_topic)
 
     async def set_state(self, payload: str) -> None:
-        """Change the entity state."""
+        """Change the entity state"""
         set_cmd, state_cmd = ENTITY_TOPIC[self._type]
         # check if the entity allows to change status
         if set_cmd:
             topic = self._topic + set_cmd
             await self._mqtt.publish(topic, payload)
+            # add a small delay to allows the device to process the message
+            time.sleep(0.001)
 
     @property
     def hash(self) -> int:
-        """Return the entity unique id hash value."""
+        """Return the entity unique id hash value"""
         return self._hash
 
     @property
     def id(self) -> int:
-        """Get entity index id."""
+        """Get entity index id"""
         return self._id

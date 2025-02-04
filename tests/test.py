@@ -47,7 +47,7 @@ class TestPgLab(unittest.IsolatedAsyncioTestCase):
                 discovery = self._mqtt.discovery
                 break
 
-        self.assertTrue(len(discovery) > 0, "No PG LAB Electronics Devices are connected to the MQTT broker.")        
+        self.assertTrue(len(discovery) > 0, "No PG LAB Electronics Devices are connected to the MQTT broker")        
         return discovery
     
     async def _relay_toggle(self, r: Relay):
@@ -86,7 +86,7 @@ class TestPgLab(unittest.IsolatedAsyncioTestCase):
         # the test suppose that the shutter opening/closing time is 
         # bigger than 10 second
 
-        # at this moment the state of the shutter is unknow
+        # at this moment the state of the shutter is unknown
         # try to open the shutter for 2 seconds .. so we are sure that the shutter is not close
         await s.open()
         time.sleep(2)
@@ -99,7 +99,7 @@ class TestPgLab(unittest.IsolatedAsyncioTestCase):
 
         self.assertTrue( s.state is Shutter.STATE_CLOSED, "Unexpected shutter state")
 
-        # we are sure that the shutte is fully close
+        # we are sure that the shutter is fully close
         # open the shutter and check the state after 1 second
         await s.open()
         time.sleep(1)
@@ -140,7 +140,7 @@ class TestPgLab(unittest.IsolatedAsyncioTestCase):
         # get the discovery message
         discovery_topic, discovery_payload = discovery
 
-        # decode the paylod from json
+        # decode the payload from json
         discovery_payload = json.loads(discovery_payload)
 
         # try to configure the pglab_device

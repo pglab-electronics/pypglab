@@ -1,50 +1,36 @@
 import asyncio
 import time
-import paho.mqtt.client as mqtt
 
-from pypglab.device import Device
-from pypglab.mqtt import Client
+from pypglab.helper import pyPgLab
 
-MQTT_SERVER = "localhost"
+MQTT_SERVER = "192.168.1.8"
 MQTT_PORT = 1883
 MQTT_USERNAME = "pierluigi"
 MQTT_PASSWORD = "password"
 
+E_BOARD_NAME = "E-BOARD-DD53AC85"
 
-async def mqtt_publish( topic: str, payload: str, qos: int | None = 0, retain: bool | None = False) -> None:
-    mqtt_client.publish(topic, payload, qos, retain)
+def turn_relay(relay, on):
+    if on:
+        asyncio.run( relay.turn_on() )
+    else:
+        asyncio.run( relay.turn_off() )
+    time.sleep(0.02)
 
+pglab = pyPgLab()
+pglab.start(MQTT_SERVER, MQTT_PORT, MQTT_USERNAME, MQTT_PASSWORD)
+pglab.connect()
 
-mqtt_client = mqtt.Client()
-mqtt_client.loop_start()
-mqtt_client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
-mqtt_client.connect(MQTT_SERVER, MQTT_PORT, 60)
+e_board = pglab.get_device_by_name(E_BOARD_NAME)
 
-# wait the connection with the broker
-time.sleep(1)
+if e_board:
+    # turn all relay outputs ON
+    for relay in e_board.relays:
+        turn_relay(relay, True)
 
-pglab_mqtt_client = Client(mqtt_publish, None, None)
+    #turn all relay outputs OFF
+    for relay in reversed(e_board.relays):
+        turn_relay(relay, False)
 
-config = {
-    "ip":"192.168.1.16", 
-    "mac":"80:34:28:1B:18:5A", 
-    "name":"e-board-office", 
-    "hw":"255.255.255", 
-    "fw":"255.255.255", 
-    "type":"E-Board", 
-    "id":"E-Board-DD53AC85", 
-    
-    "manufacturer":"PG LAB Electronics", 
-    "params":{
-        "shutters":3, 
-        "boards":"10000000" 
-    }
-}
+pglab.stop()
 
-pglab_device = Device()
-asyncio.run( pglab_device.config(pglab_mqtt_client, config, True) )
-
-for relay in pglab_device.relays:
-    asyncio.run( relay.turn_on() )
-
-mqtt_client.loop_stop()
