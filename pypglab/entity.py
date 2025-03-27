@@ -1,6 +1,6 @@
 """A base class entity for pypglab"""
 
-import time
+import asyncio
 from collections.abc import Callable
 
 from .const import ENTITY_SENSOR, ENTITY_TOPIC, TOPIC_PGLAB
@@ -92,7 +92,7 @@ class Entity:
             topic = self._topic + set_cmd
             await self._mqtt.publish(topic, payload)
             # add a small delay to allows the device to process the message
-            time.sleep(0.001)
+            await asyncio.sleep(0.001)
 
     @property
     def hash(self) -> int:
