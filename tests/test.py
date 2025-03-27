@@ -7,7 +7,7 @@ from .mqtt import MQTT
 from pypglab.device import Device
 from pypglab.relay import Relay
 from pypglab.shutter import Shutter
-from pypglab.sensor import Sensor
+from pypglab.sensor import StatusSensor
 from pypglab.const import SENSOR_TEMPERATURE
 
 UNIT_TEST_CONNECTION_TIMEOUT = 10
@@ -112,7 +112,7 @@ class TestPgLab(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(s.state is Shutter.STATE_OPEN, "Unexpected shutter state")
         self.assertTrue(state_update_changed, "Shutter Status update don't received.")
 
-    async def _sensor_state(self, sensor: Sensor):
+    async def _status_sensor(self, status_sensor: StatusSensor):
             
         state_update_changed : bool = False
 
@@ -120,19 +120,19 @@ class TestPgLab(unittest.IsolatedAsyncioTestCase):
             nonlocal state_update_changed
             state_update_changed = True
         
-        sensor.set_on_state_callback(state_changed)
+        status_sensor.set_on_state_callback(state_changed)
 
-        # wait for sensor update
+        # wait for status sensor update
         timeout = time.time() + UNIT_TEST_SENSOR_TIMEOUT
         while (not state_update_changed) and (time.time() < timeout):
             time.sleep(1)
 
         self.assertTrue(state_update_changed, "Sensor state update don't received.")
-        self.assertTrue(sensor.state and len(sensor.state) > 0, "Sensor state unexpected state")
+        self.assertTrue(status_sensor.state and len(status_sensor.state) > 0, "Sensor state unexpected state")
 
         # check if the cpu temperature value is been received... it should be available in every device
-        self.assertTrue(sensor.state.get(SENSOR_TEMPERATURE), "Sensor Temperature not available")
-        self.assertTrue(sensor.state.get(SENSOR_TEMPERATURE)>0, "Sensor Temperature unexpected value")
+        self.assertTrue(status_sensor.state.get(SENSOR_TEMPERATURE), "Sensor Temperature not available")
+        self.assertTrue(status_sensor.state.get(SENSOR_TEMPERATURE)>0, "Sensor Temperature unexpected value")
 
     async def _create_device(self, discovery) -> Device:
         pglab_device = Device()
@@ -194,14 +194,14 @@ class TestPgLab(unittest.IsolatedAsyncioTestCase):
             await self._shutter_toggle(shutter)
 
 
-    async def test_sensors(self):
-        """Test device sensor value."""
+    async def test_status_sensor(self):
+        """Test device status sensor value."""
         pglab_discovery = await self._get_discovery()
 
         for discovery in pglab_discovery:        
             pglab_device = await self._create_device(discovery)
 
-            await self._sensor_state(pglab_device.sensors)
+            await self._status_sensor(pglab_device.status_sensor)
                 
 
 def suite():
@@ -212,7 +212,7 @@ def suite():
     suite.addTest(TestPgLab('test_device'))
     suite.addTest(TestPgLab('test_relay'))
     suite.addTest(TestPgLab('test_shutter'))
-    suite.addTest(TestPgLab('test_sensors'))
+    suite.addTest(TestPgLab('test_status_sensor'))
 
     return suite
 

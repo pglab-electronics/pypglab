@@ -12,7 +12,7 @@ from .const import (
     E_SWITCH, 
     LOGGER, 
     PGLAB_DEVICE_TYPES, 
-    SENSOR_CONFIG, 
+    STATUS_SENSOR_CONFIG, 
     CONFIG_MAC, 
     CONFIG_IP, 
     CONFIG_ID, 
@@ -28,7 +28,7 @@ from .const import (
 
 from .mqtt import Client
 from .relay import CreateRelay
-from .sensor import CreateSensor
+from .sensor import CreateStatusSensor
 from .shutter import CreateShutter
 
 
@@ -98,8 +98,8 @@ class Device:
         # prepare an array of available shutters
         self._shutters = []
 
-        # prepare the sensors of the device
-        self._sensors = None
+        # prepare the status sensor of the device
+        self._status_sensor = None
 
         # internal configuration hash
         self._hash = hash(
@@ -172,12 +172,12 @@ class Device:
                     self._relays.append(relay)
 
             # prepare the sensor
-            self._sensors = await CreateSensor(
-                self._id, self._name, SENSOR_CONFIG[self._type], mqtt
+            self._status_sensor = await CreateStatusSensor(
+                self._id, self._name, STATUS_SENSOR_CONFIG[self._type], mqtt
             )
             
             if subscribe:
-                await self._sensors.subscribe_topics()
+                await self._status_sensor.subscribe_topics()
         
         return True
 
@@ -215,9 +215,9 @@ class Device:
         return self._shutters
 
     @property
-    def sensors(self):
-        """Get the device sensors ."""
-        return self._sensors
+    def status_sensor(self):
+        """Get the device status sensor."""
+        return self._status_sensor
 
     @property
     def ip(self) -> str:

@@ -69,8 +69,8 @@ SENSOR_TEMPERATURE: Final = "temp"
 SENSOR_VOLTAGE: Final = "volt"
 SENSOR_REBOOT_TIME: Final = "rtime"
 
-# Sensors configuration for a specific PG LAB device
-SENSOR_CONFIG = {
+# Sensors status for a specific PG LAB device
+STATUS_SENSOR_CONFIG = {
     "E-BOARD": [SENSOR_TEMPERATURE, SENSOR_VOLTAGE, SENSOR_REBOOT_TIME],
     "E-RELAY": [],
     "E-SWITCH": [],

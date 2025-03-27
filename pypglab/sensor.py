@@ -30,8 +30,8 @@ def SensorValueCast(sensor_type: str, value: Any) -> Any:
     return None
 
 
-class Sensor(Entity):
-    """It's a PG LAB Electronics sensor"""
+class StatusSensor(Entity):
+    """It's a PG LAB Electronics device status sensor"""
 
     def __init__(
         self,
@@ -65,7 +65,7 @@ class Sensor(Entity):
 
     @property
     def state(self) -> dict:
-        """Get sensor status"""
+        """Get sensor state"""
         return self._state
 
     @property
@@ -74,10 +74,10 @@ class Sensor(Entity):
         return len(self._state)
 
 
-async def CreateSensor(
+async def CreateStatusSensor(
     device_id: str, device_name: str, config: [str], mqtt: Client
-) -> Sensor:
-    """Create and initialize a PG LAB sensor instance"""
+) -> StatusSensor:
+    """Create and initialize a PG LAB sensors instance"""
 
-    sensor = Sensor(device_id, device_name, config, mqtt)
-    return sensor
+    status_sensor = StatusSensor(device_id, device_name, config, mqtt)
+    return status_sensor
